@@ -1,3 +1,16 @@
-controllers:
-    resource: ../src/Controller/
-    type: attribute
+index:
+    path: /
+    controller: App\Controller\TaskController::index
+
+finish:
+    path: /tasks/finish/{id}
+    controller: App\Controller\TaskController::finish
+
+delete:
+    path: /tasks/delete/{id}
+    controller: App\Controller\TaskController::delete
+
+# Añadimos la ruta para actualizar tareas:
+update:
+    path: /tasks/update/{id}
+    controller: App\Controller\TaskController::update
