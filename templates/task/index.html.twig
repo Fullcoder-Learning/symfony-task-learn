@@ -1,0 +1,113 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Listado de tareas{% endblock %}
+
+{% block body %}
+
+<div class="text-center container">
+    <table class="table mt-4">
+        <thead>
+            <tr>
+                <th scope="col">Título</th>
+                <th scope="col">Descripción</th>
+                <th scope="col">Fecha creación</th>
+                <th scope="col">Finalizada</th>
+                <th scope="col">Fecha Finalización</th>
+                <th scope="col">Operaciones</th>
+            </tr>
+        </thead>
+        <tbody id="taskList" class="text-start">
+            {% for task in tasks %}
+            <tr>
+                <td>{{task.name}}</td>
+                <td>{{task.description}}</td>
+                <td>{{task.dateCreated|date("d/m/Y H:m:s")}}</td>
+                <td>
+                    {% if task.isComplete == true %}
+                    si
+                    {% else %}
+                    no
+                    {% endif %}
+                </td>
+                <td>
+                    {% if task.dateFinish is defined %}
+                        {% if task.dateFinish is not null %}
+                            {{task.dateFinish|date("d/m/Y H:m:s")}}
+                        {% endif %}
+                    {% endif %}
+                </td>
+                <td class="text-center">
+                    <!-- añadimos el botón para editar tarea y le pasamos los valores: -->                            
+                    <button class="btn btn-sm btn-warning me-2" onclick="editTask({{task.id}}, '{{task.name}}', '{{task.description}}', '{{task.dateCreated|date("d/m/Y H:m:s")}}', '{{task.isComplete}}', '{{task.dateFinish|date("d/m/Y H:m:s")}}')">editar tarea</button>
+                    <button class="btn btn-sm btn-primary me-2" data-bs-toggle="modal" data-bs-target="#taskModal" onclick="getTask({{task.id}}, '{{task.name}}', 'finish')">finalizar tarea</button>
+                    <button class="btn btn-sm btn-danger me-2" data-bs-toggle="modal" data-bs-target="#taskModal" onclick="getTask({{task.id}}, '{{task.name}}', 'delete')">Eliminar tarea</button>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+        <tbody id="taskEdit" class="d-none">
+            <form id="taskForm" action="" method="post" role="form" class="row">
+                {{ form_row(taskEditForm._token) }}
+                <tr>
+                    <td>
+                        {{ form_label(taskEditForm.name, 'name', {'label_attr': {'style': 'display:none'}}) }}
+                        {{ form_widget(taskEditForm.name, {'attr': {'class': 'col me-2 form-control form-sm'}}) }}
+                        {{ form_errors(taskEditForm.name) }}
+                    </td>
+                    <td>
+                        {{ form_label(taskEditForm.description, 'description', {'label_attr': {'style': 'display:none'}}) }}
+                        {{ form_widget(taskEditForm.description, {'attr':{'class': 'col me-2 form-control'}}) }}
+                        {{ form_errors(taskEditForm.description, {'attr': {'class': 'col-md-3'}}) }}
+                    </td>
+                    <td id="taskDateCreated"></td>
+                    <td id="taskComplete"></td>
+                    <td id="taskDateFinish"></td>
+                    <td class="text-center">
+                        <button type="submit" class="btn btn-sm btn-success me-2 mb-1">Guardar</button>
+                        <button type="button" class="btn btn-sm btn-primary me-2 mb-1" onclick="cancelEdit()">Cancelar</button>
+                    </td>
+                </tr>
+            </form>
+        </tbody>
+    </table>
+    <div id="taskCreate" class="row text-center align-items-end">
+        <form action="{{path('index')}}" method="post" role="form" class="row">
+            <div class="col-md-5"></div>
+            {{ form_row(taskForm._token) }}
+
+            {{ form_label(taskForm.name, 'name', {'label_attr': {'style': 'display:none'}}) }}
+            {{ form_widget(taskForm.name, {'attr': {'class': 'col me-2 form-control form-sm', 'placeholder':'Título'}}) }}
+            {{ form_errors(taskForm.name) }}
+
+            {{ form_label(taskForm.description, 'description', {'label_attr': {'style': 'display:none'}}) }}
+            {{ form_widget(taskForm.description, {'attr':{'class': 'col me-2 form-control', 'placeholder':'Descripción'}}) }}
+            {{ form_errors(taskForm.description, {'attr': {'class': 'col-md-3'}}) }}
+
+            <input class="col me-2 form-control btn btn-success" type="submit" value="Crear tarea" />
+        </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="taskModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="taskModalTitle"></h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <!-- creamos un id para pasar id y nombre -->
+            <p id="taskDefinition">id - tarea</p>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            <!-- creamos un identificador para asignar la ruta por javascript: -->
+            <a id="taskButton" href="" class="">Aceptar</a>
+        </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+

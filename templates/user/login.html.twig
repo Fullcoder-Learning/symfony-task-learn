@@ -1,0 +1,94 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello UserController!{% endblock %}
+
+{% block body %}
+
+<div class=" bodystyle text-center" cz-shortcut-listen="true">
+    <!-- Creamos un alert para avisar de cada estado y le pasamos los datos del array -->
+    <div class="alert-group alert {{alert['status']}} alert-dismissible fade {{alert['show']}}" role="alert">
+        {{alert['message']}}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+
+    <div class="form-signin text-center">
+        <h1>Por favor inicia sesión</h1>
+        <form action="{{ path('login')}}" method="post">
+            <div class="form-floating">
+                <input type="email" id="username" name="_username" value="{{last_username}}" class="form-control" />
+                <label htmlFor="floatingInput">Email</label>
+            </div>
+            <div class="form-floating">
+                <input type="password" id="password" name="_password" class="form-control" />
+                <label htmlFor="floatingPassword">Contraseña</label>
+            </div>
+            <div class="mb-3">
+            <button type="button" class="cursor" data-bs-toggle="modal" data-bs-target="#registerUser"  data-bs-toggle="modal" data-bs-target="#registerUser">Crear usuario</button>
+            </div>
+            <div class="mb-3">
+            <!-- actualizamos el botón para desplegar el modal si ha olvidado contraseña -->
+            <button type="button" class="cursor" data-bs-toggle="modal" data-bs-target="#resetPassword"  data-bs-toggle="modal" data-bs-target="#resetPassword">¿has olvidado la contraseña?</button>
+            </div>
+            <button class="w-100 btn btn-lg btn-primary" type="submit">Iniciar sesión</button>
+        </form>
+    </div>
+</div>
+
+<div class="modal fade" id="registerUser" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Registro</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <div class="row">
+                <div class="col">
+                    <div class="row">
+                        <div class="container">
+                            <form id="userForm" action="{{path('register')}}" method="post" role="form" class="container">
+                                {{ form_row(registration_form._token) }}
+
+                                {{ form_label(registration_form.email, 'email', {'label_attr': {'style': 'display:none'}}) }}
+                                {{ form_widget(registration_form.email, {'attr': {'class': 'form-control mt-3', 'placeholder':'Email'}}) }}
+                                {{ form_errors(registration_form.email) }}
+                                
+                                {{ form_label(registration_form.password, 'password', {'label_attr': {'style': 'display:none'}}) }}
+                                {{ form_widget(registration_form.password, {'attr':{'class': 'form-control mt-3', 'placeholder': 'Contraseña', 'type':'password'}}) }}
+                                {{ form_errors(registration_form.password, {'attr': {'class': 'col-md-3'}}) }}
+                                
+                                <input type="submit" class="btn btn-success form-control mt-3" value="Darse de alta" />
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+    </div>
+</div>
+
+<!-- modal para recuperar contraseña -->
+<div class="modal fade" id="resetPassword" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Resetear contraseña</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <div class="row">
+                <div class="col text-center">
+                    <form action="{{path('send_reset_email')}}" method="post" role="form">
+                        <input type="email" name="reset_email" class="form-control mt-3" placeholder="Email" />  
+                        <input type="submit"  class="btn btn-success form-control mt-3" value="Enviar email" data-bs-dismiss="modal" />
+                        <small>Recibirás un email que te llevará donde resetear tu contraseña</small>
+                    </form>
+                </div>
+            </div>
+        </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
