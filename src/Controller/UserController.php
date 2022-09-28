@@ -14,6 +14,8 @@ use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
+// cargamos las siguientes librerías para poder cerrar sesión antes de borrar usuario:
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 use App\Entity\User;
 use App\Form\UserType;
@@ -24,7 +26,7 @@ class UserController extends AbstractController
     public function login(AuthenticationUtils $authenticationUtils, Request $request): Response 
     {   
         $error = $authenticationUtils->getLastAuthenticationError();
-        $lastUsername = $authenticationUtils->getLastUsername();
+        $lastUsername = "";
 
         $alert = array(
             'show' => $request->query->get("show") ? $request->query->get("show") : '',
@@ -103,7 +105,6 @@ class UserController extends AbstractController
         $isAvatar = $user->getAvatar();
         $username = $user->getName();
 
-        // cargamos los datos para el alert con parámetros a recibir:
         $alert = array(
             'show' => $request->query->get("show") ? $request->query->get("show") : '',
             'status' => $request->query->get("status") ? $request->query->get("status") : '',
@@ -152,7 +153,6 @@ class UserController extends AbstractController
 
                 $doctrine->flush();
 
-                // al actualizar los datos lanzamos un mensaje de aviso:
                 $alert = array(
                     'show' => 'show',
                     'status' => 'alert-success',
@@ -167,7 +167,7 @@ class UserController extends AbstractController
             'user_edit_form' => $userEditForm->createView(),
             'avatar' => $avatar, 
             'username' => $username,
-            'alert' => $alert // recuerda cargar en twig el alert
+            'alert' => $alert
         ]);
     }
 
@@ -195,7 +195,6 @@ class UserController extends AbstractController
             $mailer->send($emailToSend);
 
             
-            // se envía el mensaje de que todo ha salido bien:
             $alert = array(
                 'show' => 'show',
                 'status' => 'alert-success',
@@ -203,7 +202,6 @@ class UserController extends AbstractController
             );
             
         }else{
-            // se envía el mensaje de que no existe el email en la base de datos
             $alert = array(
                 'show' => 'show',
                 'status' => 'alert-warning',
@@ -211,7 +209,6 @@ class UserController extends AbstractController
             );
         }
 
-        // cargamos el alert:
         return $this->redirectToRoute('login', $alert);
         /* Este código lo usamos para depurar el correo:
         return new Response(
@@ -245,29 +242,51 @@ class UserController extends AbstractController
                         $user->setPassword($oldPassword);
                     }
                     $doctrine->flush();
-                    // se envía el mensaje de que se ha restablecido la contraseña:
                     $alert = array(
                         'show' => 'show',
                         'status' => 'alert-success',
                         'message' => 'La contraseña ha sido reestablecida con éxito, ya puede iniciar sesión.'
                     );
-                    // añadimos la alerta:
                     return $this->redirectToRoute('login', $alert);
                 }
             }
         }else{
-            // se envía el mensaje de que hubo un error al intentar reestablecer:
             $alert = array(
                 'show' => 'show',
                 'status' => 'alert-danger',
                 'message' => 'Ha habido un error al reestablecer la contraseña, por favor inténtelo de nuevo.'
             );
-            // igualmente pasamos el alert:
             return $this->redirectToRoute('login', $alert); 
         }
 
         return $this->render('user/reset_password.html.twig', [
             'new_password_form' => $newPasswordForm->createView(),
         ]);
+    }
+
+    // creamos el método para eliminar el usuario y para cerrar sesión:
+    public function delete_user(
+        EntityManagerInterface $doctrine,
+        TokenStorageInterface $tokenStorage): Response
+    {
+        // recuperamos el usuario que esta en sesión:
+        $user = $this->getUser();
+        
+        if($user){
+            // cerramos la sesión vaciando el token:
+            $tokenStorage->setToken();
+
+            // borramos al usuario si realmente existe:
+            $doctrine->remove($user);
+            $doctrine->flush(); 
+        }
+        // notificamos que ha sido dado de baja en login:
+        $alert = array(
+            'show' => 'show',
+            'status' => 'alert-danger',
+            'message' => 'Su usuario ha sido dado de baja. Ya no podrá iniciar sesión con el'
+        );
+        return $this->redirectToRoute('login', $alert); 
+
     }
 }

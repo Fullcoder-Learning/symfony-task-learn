@@ -4,7 +4,6 @@
 
 {% block body %}
 
-<!-- Creamos un alert para avisar de cada estado y le pasamos los datos del array -->
 <div class="alert-group alert {{alert['status']}} alert-dismissible fade {{alert['show']}}" role="alert">
     {{alert['message']}}
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
@@ -50,8 +49,33 @@
                     <div class="col-md-12 mt-3">
                         <a href="{{path('logout')}}">Cerrar sesión</a>
                     </div>
+                    <!-- creamos un nuevo botón para eliminar el usuario: -->
+                    <div class="col-md-12 mt-3">
+                        <button type="button" class="cursor cursor-delete me-2 mb-1" data-bs-toggle="modal" data-bs-target="#deleteUserModal">Dar de baja usuario</button>
+                    </div>
                 </div>
             </form>
+</div>
+
+<!-- cargamos el modal aquí abajo: -->
+<div class="modal fade" id="deleteUserModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h5 className="modal-title" id="exampleModalLabel">Cerrar cuenta</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <p>Se va a eliminar su cuenta de usuario junto a todas sus tareas</p>
+            <p>Esta operación no tiene retorno, ¿proceder?</p>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            <!-- añadir función al botón: -->
+            <a href="{{path('delete_user')}}" class="btn btn-danger">Aceptar</a>
+        </div>
+        </div>
+    </div>
 </div>
 
 {% endblock %}

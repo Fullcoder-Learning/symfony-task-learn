@@ -34,7 +34,10 @@ send_reset_email:
     path: /send_reset_email
     controller: App\Controller\UserController::send_reset_email
 
-# ruta para resetear contraseña:
 reset_password:
     path: /reset_password/{hashId}
     controller: App\Controller\UserController::reset_password
+
+delete_user:
+    path: /delete_user
+    controller: App\Controller\UserController::delete_user

@@ -13,3 +13,11 @@
     top: 0;
     width: 100%;
 }
+
+.cursor{
+    border: 0px;
+    background: transparent;
+}
+    .cursor-delete{
+        color: red;
+    }
