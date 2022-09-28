@@ -10,7 +10,34 @@ delete:
     path: /tasks/delete/{id}
     controller: App\Controller\TaskController::delete
 
-# Añadimos la ruta para actualizar tareas:
 update:
     path: /tasks/update/{id}
     controller: App\Controller\TaskController::update
+
+login: 
+    path: /login
+    controller: App\Controller\UserController::login
+
+logout:
+    path: /logout
+    controller: App\Controller\UserController::logout
+
+register: 
+    path: /register
+    controller: App\Controller\UserController::register
+
+profile:
+    path: /profile
+    controller: App\Controller\UserController::profile
+
+send_reset_email:
+    path: /send_reset_email
+    controller: App\Controller\UserController::send_reset_email
+
+reset_password:
+    path: /reset_password/{hashId}
+    controller: App\Controller\UserController::reset_password
+
+delete_user:
+    path: /delete_user
+    controller: App\Controller\UserController::delete_user

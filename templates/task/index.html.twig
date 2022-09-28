@@ -76,11 +76,11 @@
             {{ form_row(taskForm._token) }}
 
             {{ form_label(taskForm.name, 'name', {'label_attr': {'style': 'display:none'}}) }}
-            {{ form_widget(taskForm.name, {'attr': {'class': 'col me-2 form-control form-sm'}}) }}
+            {{ form_widget(taskForm.name, {'attr': {'class': 'col me-2 form-control form-sm', 'placeholder':'Título'}}) }}
             {{ form_errors(taskForm.name) }}
 
             {{ form_label(taskForm.description, 'description', {'label_attr': {'style': 'display:none'}}) }}
-            {{ form_widget(taskForm.description, {'attr':{'class': 'col me-2 form-control'}}) }}
+            {{ form_widget(taskForm.description, {'attr':{'class': 'col me-2 form-control', 'placeholder':'Descripción'}}) }}
             {{ form_errors(taskForm.description, {'attr': {'class': 'col-md-3'}}) }}
 
             <input class="col me-2 form-control btn btn-success" type="submit" value="Crear tarea" />
