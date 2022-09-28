@@ -84,7 +84,6 @@ class TaskController extends AbstractController
         $user = $this->getUser();
         $task = $doctrine->getRepository(Task::class)->findOneBy(['id' => $id, 'owner' => $user]);
         if($task){
-            dump($request->query->get('name'));
             $form = $this->createForm(TaskType::class, $task);
             $form->handleRequest($request);
             if($form->isSubmitted() && $form->isValid()){

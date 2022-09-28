@@ -1,0 +1,57 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Perfil de usuario{% endblock %}
+
+{% block body %}
+
+<!-- Creamos un alert para avisar de cada estado y le pasamos los datos del array -->
+<div class="alert-group alert {{alert['status']}} alert-dismissible fade {{alert['show']}}" role="alert">
+    {{alert['message']}}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+
+<div class="container mt-4 text-center">
+            <h3>Datos de usuario</h3>
+            <hr />
+            <!-- la imagen vamos a cargarla desde controlador -->
+            <img src="{{avatar}}" class="avatarEdit rounded img-thumbnail img-fluid"  alt="Avatar" />
+            <!-- No olvides poner que el formulario es tipo multipart -->
+            <form id="userEditForm" action="" method="post" role="form" enctype='multipart/form-data'>
+                {{ form_row(user_edit_form._token) }}
+                <div class="row">
+                    <div class="col-md-12 mt-3">
+                        {{ form_label(user_edit_form.avatar, 'avatar', {'label_attr': {'style': 'display:none'}}) }}
+                        {{ form_widget(user_edit_form.avatar, {'attr': {'class': 'col me-2 form-control form-sm', 'placeholder': 'Avatar'}}) }}
+                        {{ form_errors(user_edit_form.avatar) }}
+                    </div>
+                    <div class="col-md-12 mt-3">
+                        {{ form_label(user_edit_form.name, 'name', {'label_attr': {'style': 'display:none'}}) }}
+                        {{ form_widget(user_edit_form.name, {'attr': {'class': 'col me-2 form-control form-sm', 'placeholder': 'Nombre'}}) }}
+                        {{ form_errors(user_edit_form.name) }}
+                    </div>
+                    <div class="col-md-12 mt-3">
+                        {{ form_label(user_edit_form.lastname, 'lastname', {'label_attr': {'style': 'display:none'}}) }}
+                        {{ form_widget(user_edit_form.lastname, {'attr': {'class': 'col me-2 form-control form-sm', 'placeholder': 'Apellidos'}}) }}
+                        {{ form_errors(user_edit_form.lastname) }}
+                    </div>
+                    <div class="col-md-12 mt-3">
+                        {{ form_label(user_edit_form.email, 'email', {'label_attr': {'style': 'display:none'}}) }}
+                        {{ form_widget(user_edit_form.email, {'attr': {'class': 'col me-2 form-control form-sm', 'placeholder': 'Email'}}) }}
+                        {{ form_errors(user_edit_form.email) }}
+                    </div>
+                    <div class="col-md-12 mt-3">
+                        {{ form_label(user_edit_form.password, 'password', {'label_attr': {'style': 'display:none'}}) }}
+                        {{ form_widget(user_edit_form.password, {'attr': {'class': 'col me-2 form-control form-sm', 'placeholder': 'Contraseña (dejar en blanco para no cambiar)'}}) }}
+                        {{ form_errors(user_edit_form.password) }}
+                    </div>
+                    <div class="col-md-12 mt-3">            
+                        <input type="submit" class="btn btn-success form-control mt-3" value="Actualizar datos" />
+                    </div>
+                    <div class="col-md-12 mt-3">
+                        <a href="{{path('logout')}}">Cerrar sesión</a>
+                    </div>
+                </div>
+            </form>
+</div>
+
+{% endblock %}

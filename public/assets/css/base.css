@@ -7,3 +7,9 @@
     width: 200px;
     height: 200px;
 }
+
+.alert-group{
+    position:fixed;
+    top: 0;
+    width: 100%;
+}

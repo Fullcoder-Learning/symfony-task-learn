@@ -7,7 +7,7 @@
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
         <link rel="stylesheet" href="{{asset('assets/css/base.css')}}" />
         <!-- Esta hoja comprueba si la ruta es login o reset_password para cargarse: -->
-        {% if app.request.get('_route') == 'login' or app.request.get('_route') == 'reset_password' %}
+        {% if app.request.get('_route') in ['login','reset_password'] %}
             <link rel="stylesheet" href="{{asset('assets/css/login_style.css')}}" />
         {% endif %}
         {# Run `composer require symfony/webpack-encore-bundle` to start using Symfony UX #}
@@ -21,7 +21,7 @@
     </head>
     <body>
         <!-- Ocultar navbar cuando la ruta sea login o register: -->
-        {% if app.request.get('_route') != 'login' %}
+        {% if app.request.get('_route') not in ['login','reset_password'] %}
             <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
                 <div class="col-md-11 align-items-start ms-2" >
                     <a href="{{ path('index') }}" class="navbar-brand">Task Learn</a>
